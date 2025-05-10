@@ -37,9 +37,20 @@
             $devicesParsed->{(string)$id}->{"notified"} = false;
             $devicesOutput = json_encode($devicesParsed);
             file_put_contents(DEVICES,$devicesOutput);
+
+            // for each email address listed
+            foreach($devicesParsed->{(string)$id}->{"notify"} as $email) {
+                require_once 'emailUtils.php';
+                $subject = RETURN_SUBJ;
+                $body = str_replace(
+                    array("%email%","%id%","%stamp%"),
+                    array($email,$id,$stamp),
+                    RETURN_BODY
+                );
+                sendEmail($email,$subject,$body);
+            }
         } 
     }
 
     http_response_code(200);
     exit("Success");
-?>

@@ -33,7 +33,14 @@
 
                 // for each email address listed
                 foreach($devicesParsed->{(string)$id}->{"notify"} as $email) {
-                    
+                    require_once 'emailUtils.php';
+                    $subject = OUTAGE_SUBJ;
+                    $body = str_replace(
+                        array("%email%","%id%","%stamp%"),
+                        array($email,$id,date("j F Y \\a\\t G:i",$stamp)),
+                        OUTAGE_BODY
+                    );
+                    sendEmail($email,$subject,$body);
                 }
             }
         }
