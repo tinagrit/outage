@@ -1,0 +1,6 @@
+{
+    "123": {
+        "notify": ["test@test.com"],
+        "notified": false
+    }
+}
