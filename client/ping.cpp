@@ -5,12 +5,14 @@ const char* SSIDNAME = "SSID";
 const char* PASSWORD = "PASSWORD";
 const char* ENDPOINT = "http://localhost/ping.php?id=123";
 
-const unsigned long PING_INTERVAL_MS = 3*60*1000;
+const unsigned long INTERVAL_SECONDS = 180;
 
+const unsigned long PING_INTERVAL_MS = INTERVAL_SECONDS * 1000;
 unsigned long lastPing = 0;
+const int BLUE_LED_PIN = 2;
 
 void setup() {
-    pinMode(2, OUTPUT);
+    pinMode(BLUE_LED_PIN, OUTPUT);
     Serial.begin(115200);
     WiFi.begin(SSIDNAME, PASSWORD);
     WiFi.setAutoReconnect(true);
@@ -19,7 +21,7 @@ void setup() {
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
     }
-    digitalWrite(2, HIGH);
+    digitalWrite(BLUE_LED_PIN, HIGH);
     Serial.print("\nIP Address: ");
     Serial.println(WiFi.localIP());
 
@@ -31,13 +33,13 @@ void setup() {
 void loop() {
     unsigned long current = millis();
     if (WiFi.status() == WL_CONNECTED) {
-        digitalWrite(2, HIGH);
+        digitalWrite(BLUE_LED_PIN, HIGH);
         if (current - lastPing >= PING_INTERVAL_MS) {
             ping();
             lastPing = current;
         }
     } else {
-        digitalWrite(2, LOW);
+        digitalWrite(BLUE_LED_PIN, LOW);
     }
     delay(1000);
 }
